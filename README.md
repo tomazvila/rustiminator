@@ -4,6 +4,16 @@ A REST API for managing tags built with Rust, Axum, and SQLite.
 
 ## Setup
 
+### SQLite setup
+```bash
+cargo install sqlx-cli --no-default-features --features sqlite # one time only, for sqlx-cli tool installation
+export DATABASE_URL="sqlite:./rustimenator.db"
+sqlx database create --database-url sqlite:./rustimenator.db
+sqlx migrate run --database-url sqlite:./rustimenator.db
+cargo build
+cargo sqlx prepare # sets up macros for ide
+```
+
 ### Database
 The application uses SQLite and automatically runs migrations on startup. Ensure your database URL is configured and the `./migrations` directory contains your migration files.
 
