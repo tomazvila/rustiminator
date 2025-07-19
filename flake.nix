@@ -2,7 +2,7 @@
   description = "Rustimenator - A REST API for managing tags, tasks, and timed events";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
@@ -29,8 +29,6 @@
 
         buildInputs = with pkgs; [ 
           sqlite 
-        ] ++ lib.optionals stdenv.isDarwin [
-          darwin.apple_sdk.frameworks.SystemConfiguration
         ];
       in
       {
