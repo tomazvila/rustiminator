@@ -1,3 +1,7 @@
 /target
 *.db*
 .sqlx
+result
+result-*
+.direnv
+.envrc
