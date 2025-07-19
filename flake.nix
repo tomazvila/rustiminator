@@ -17,7 +17,7 @@
         pkgs = import nixpkgs {
           inherit system overlays;
         };
-        
+
         rustToolchain = pkgs.rust-bin.stable.latest.default.override {
           extensions = [ "rust-src" ];
         };
@@ -37,9 +37,9 @@
         packages.default = pkgs.rustPlatform.buildRustPackage {
           pname = "rustimenator";
           version = "0.1.0";
-          
+
           src = pkgs.lib.cleanSource ./.;
-          
+
           cargoLock = {
             lockFile = ./Cargo.lock;
           };
@@ -71,7 +71,7 @@
             cargo-watch
             rust-analyzer
           ]);
-          
+
           shellHook = ''
             export DATABASE_URL="sqlite:./rustimenator.db"
             echo "Rustimenator development environment"
