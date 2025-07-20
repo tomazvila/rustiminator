@@ -1,0 +1,22 @@
+name: Deploy to NixOS
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Update Nix flake lock
+        run: nix flake update
+
+      - name: Rebuild and switch NixOS
+        run: sudo nixos-rebuild switch --flake .#nixos
+
+      - name: Restart Rust service
+        run: sudo systemctl restart rustimenator
+
