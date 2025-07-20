@@ -15,8 +15,8 @@ jobs:
         run: nix flake update
 
       - name: Rebuild and switch NixOS
-        run: sudo nixos-rebuild switch --flake .#nixos
+        run: nixos-rebuild switch --flake .#nixos
 
       - name: Restart Rust service
-        run: sudo systemctl restart rustimenator
+        run: systemctl restart rustimenator
 
