@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Debug priveleges check
         run: |
-          prlimit --no-new-privs|| echo "prlimit not available - install util-linux if needed"
+          cat /proc/$$/status | grep NoNewPrivs || echo "Unable to check flag"
           sudo echo "Sudo test successful"
       - name: Run deployment script
         run: /etc/nixos/deploy-rustimenator.sh
