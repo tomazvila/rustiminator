@@ -12,9 +12,7 @@ jobs:
     - run: nix profile install . || nix profile upgrade '.*rustimenator.*'
     - run: mkdir -p ~/rustimenator-data
     - run: |
-        export XDG_RUNTIME_DIR=/run/user/$(id -u)
-        export DBUS_SESSION_BUS_ADDRESS=unix:path=$XDG_RUNTIME_DIR/bus
-        /run/current-system/sw/bin/systemctl --user daemon-reload
-        /run/current-system/sw/bin/systemctl --user enable rustimenator
-        /run/current-system/sw/bin/systemctl --user restart rustimenator
+      systemctl --machine=ghrunner@.host --user daemon-reload
+      systemctl --machine=ghrunner@.host --user enable rustimenator
+      systemctl --machine=ghrunner@.host --user restart rustimenator
 
