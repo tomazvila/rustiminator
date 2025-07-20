@@ -1,36 +1,18 @@
-name: Deploy Rustimenator
+name: Deploy
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   deploy:
-    runs-on: self-hosted
-
+    runs-on: [self-hosted, nixos-runner]
     steps:
     - uses: actions/checkout@v4
-
-    - name: Build application
-      run: nix build .#default
-
-    - name: Install to user profile
-      run: |
-        # Install the new version to user profile
-        nix profile install --profile ~/.local/state/nix/profiles/rustimenator .#default
-
-    - name: Update service and restart
-      run: |
-        # Stop the service if running
-        systemctl --user stop rustimenator || true
-
+    - run: nix profile install . || nix profile upgrade '.*rustimenator.*'
+    - run: mkdir -p ~/rustimenator-data
+    - run: |
         systemctl --user daemon-reload
-
-        systemctl --user start rustimenator
-
         systemctl --user enable rustimenator
-
-        sleep 5
-        systemctl --user status rustimenator
+        systemctl --user restart rustimenator
 
