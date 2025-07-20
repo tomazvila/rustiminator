@@ -1,25 +1,16 @@
-name: Deploy to NixOS
+name: Update and Rebuild NixOS
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Update flake lockfile
+        run: sudo nix flake update --flake /etc/nixos
 
-      - name: Clean Git tree
-        run: git reset --hard HEAD && git clean -fd
-
-      - name: Update Nix flake lock
-        run: nix flake update
-
-      - name: Rebuild and switch NixOS
-        run: /run/current-system/sw/bin/nixos-rebuild switch --flake .#nixos --impure
-
-      - name: Restart Rust service
-        run: /run/current-system/sw/bin/systemctl restart rustimenator
+      - name: Rebuild and switch NixOS configuration
+        run: sudo nixos-rebuild switch --flake /etc/nixos
 
