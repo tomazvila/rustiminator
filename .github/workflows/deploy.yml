@@ -11,11 +11,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Clean Git tree
+        run: git reset --hard HEAD && git clean -fd
+
       - name: Update Nix flake lock
         run: nix flake update
 
       - name: Rebuild and switch NixOS
-        run: /run/current-system/sw/bin/nixos-rebuild switch --flake .#nixos
+        run: /run/current-system/sw/bin/nixos-rebuild switch --flake .#nixos --impure
 
       - name: Restart Rust service
         run: /run/current-system/sw/bin/systemctl restart rustimenator
