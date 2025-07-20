@@ -8,9 +8,6 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      - name: Update flake lockfile
-        run: sudo nix flake update --flake /etc/nixos
-
-      - name: Rebuild and switch NixOS configuration
-        run: sudo nixos-rebuild switch --flake /etc/nixos
+      - name: Run deployment script
+        run: /etc/nixos/deploy-rustimenator.sh
 
