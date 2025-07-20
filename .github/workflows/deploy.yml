@@ -8,6 +8,10 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
+      - name: Debug priveleges check
+        run: |
+          prlimit --no-new-privileges || echo "prlimit not available - install util-linux if needed"
+          sudo echo "Sudo test successful"
       - name: Run deployment script
         run: /etc/nixos/deploy-rustimenator.sh
 
