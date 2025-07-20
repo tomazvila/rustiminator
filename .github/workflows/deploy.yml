@@ -9,8 +9,8 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Update flake lockfile
-        run: sudo nix flake update --flake /etc/nixos
+        run: nix flake update --flake /etc/nixos
 
       - name: Rebuild and switch NixOS configuration
-        run: sudo nixos-rebuild switch --flake /etc/nixos
+        run: nixos-rebuild switch --flake /etc/nixos
 
