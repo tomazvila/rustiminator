@@ -8,11 +8,11 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-    - uses: actions/checkout@v4
-    - run: nix profile install . || nix profile upgrade '.*rustimenator.*'
-    - run: mkdir -p ~/rustimenator-data
-    - run: |
-      systemctl --machine=ghrunner@.host --user daemon-reload
-      systemctl --machine=ghrunner@.host --user enable rustimenator
-      systemctl --machine=ghrunner@.host --user restart rustimenator
+      - uses: actions/checkout@v4
+      - run: nix profile install . || nix profile upgrade '.*rustimenator.*'
+      - run: mkdir -p ~/rustimenator-data
+      - run: |
+          systemctl --machine=ghrunner@.host --user daemon-reload
+          systemctl --machine=ghrunner@.host --user enable rustimenator
+          systemctl --machine=ghrunner@.host --user restart rustimenator
 
