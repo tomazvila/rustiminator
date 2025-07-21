@@ -60,19 +60,22 @@
         };
       in
       {
-        packages = {
-          default = rustimenatorPkg;
-
-          dockerImage = pkgs.dockerTools.buildLayeredImage {
-            name = "rustimenator";
-            tag = "0.1.0";
-            contents = [ rustimenatorPkg pkgs.sqlx-cli pkgs.sqlite pkgs.bash ];
-
-            config = {
-              Cmd = [ "/entrypoint.sh" ];
-              ExposedPorts = { "8080/tcp" = {}; };
-              Volumes = { "/data" = {}; };
-            };
+        packages.dockerImage = pkgs.dockerTools.buildImage {
+          name = "rustimenator";
+          tag = "0.1.0";
+          copyToRoot = pkgs.buildEnv {
+            name = "image-root";
+            paths = [ rustimenatorPkg pkgs.sqlx-cli pkgs.sqlite pkgs.bash self.packages.${system}.entrypoint ];
+            postBuild = ''
+              mkdir -p $out/bin
+              cp ${self.packages.${system}.entrypoint}/bin/entrypoint.sh $out/entrypoint.sh
+              chmod +x $out/entrypoint.sh
+            '';
+          };
+          config = {
+            Cmd = [ "/entrypoint.sh" ];
+            ExposedPorts = { "8080/tcp" = {}; };
+            Volumes = { "/data" = {}; };
           };
         };
 
