@@ -8,11 +8,23 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
-      - run: nix profile install . || nix profile upgrade '.*rustimenator.*'
-      - run: mkdir -p ~/rustimenator-data
-      - run: |
-          systemctl --machine=ghrunner@.host --user daemon-reload
-          systemctl --machine=ghrunner@.host --user enable rustimenator
-          systemctl --machine=ghrunner@.host --user restart rustimenator
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image with Nix
+        run: nix build .#dockerImage
+
+      - name: Load Docker image
+        run: docker load < result
+
+      - name: Create data directory
+        run: mkdir -p ~/rustimenator-data
+
+      - name: Stop and remove existing container (if any)
+        run: |
+          docker stop rustimenator || true
+          docker rm rustimenator || true
+
+      - name: Run new container
+        run: docker run -d -p 8080:8080 -v ~/rustimenator-data:/data --name rustimenator rustimenator:0.1.0
 
