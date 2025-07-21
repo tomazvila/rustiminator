@@ -30,9 +30,8 @@
         buildInputs = with pkgs; [ 
           sqlite 
         ];
-      in
-      {
-        packages.default = pkgs.rustPlatform.buildRustPackage {
+
+        rustimenatorPkg = pkgs.rustPlatform.buildRustPackage {
           pname = "rustimenator";
           version = "0.1.0";
 
@@ -54,13 +53,45 @@
             ${pkgs.sqlx-cli}/bin/sqlx migrate run
           '';
 
-          # Include migrations in the output
           postInstall = ''
             mkdir -p $out/share/rustimenator
             cp -r migrations $out/share/rustimenator/
           '';
-
         };
+      in
+      {
+        packages = {
+          default = rustimenatorPkg;
+
+          dockerImage = pkgs.dockerTools.buildLayeredImage {
+            name = "rustimenator";
+            tag = "0.1.0";
+            contents = [ rustimenatorPkg pkgs.sqlx-cli pkgs.sqlite pkgs.bash ];
+
+            config = {
+              Cmd = [ "/entrypoint.sh" ];
+              ExposedPorts = { "8080/tcp" = {}; };
+              Volumes = { "/data" = {}; };
+            };
+          };
+        };
+
+        packages.entrypoint = pkgs.writeShellScriptBin "entrypoint.sh" ''
+          #!/usr/bin/env bash
+          set -e
+
+          # Set database path (inside mounted volume)
+          export DATABASE_URL="sqlite:/data/rustimenator.db"
+
+          # Create DB if not exists and run migrations
+          if [ ! -f "/data/rustimenator.db" ]; then
+            sqlx database create
+          fi
+          sqlx migrate run --source /share/rustimenator/migrations
+
+          # Start the app
+          exec rustimenator
+        '';
 
         devShells.default = pkgs.mkShell {
           inherit buildInputs;
@@ -78,3 +109,4 @@
         };
       });
 }
+
