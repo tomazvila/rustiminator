@@ -7,8 +7,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let pool = create_database_pool(&database_url).await?;
     let app = create_app(pool);
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
-    println!("Server running on http://0.0.0.0:3000");
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:8080").await?;
+    println!("Server running on http://0.0.0.0:8080");
     println!("Database: {}", database_url);
 
     axum::serve(listener, app).await?;

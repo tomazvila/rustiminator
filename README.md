@@ -206,7 +206,7 @@ Stops a running event by ID, setting its `stopped_at` timestamp to now and retur
 #### Creating a tag:
 
 ```bash
-curl -X POST http://localhost:3000/tag \
+curl -X POST http://localhost:8080/tag \
   -H "Content-Type: application/json" \
   -d '{"name": "rust"}'
 ```
@@ -214,7 +214,7 @@ curl -X POST http://localhost:3000/tag \
 #### Getting all tags:
 
 ```bash
-curl http://localhost:3000/tags
+curl http://localhost:8080/tags
 ```
 
 ### Tasks
@@ -222,7 +222,7 @@ curl http://localhost:3000/tags
 #### Creating a task:
 
 ```bash
-curl -X POST http://localhost:3000/task \
+curl -X POST http://localhost:8080/task \
   -H "Content-Type: application/json" \
   -d '{"task": "Complete API documentation"}'
 ```
@@ -230,7 +230,7 @@ curl -X POST http://localhost:3000/task \
 #### Getting all tasks:
 
 ```bash
-curl http://localhost:3000/tasks
+curl http://localhost:8080/tasks
 ```
 
 ### Events
@@ -238,7 +238,7 @@ curl http://localhost:3000/tasks
 #### Starting an event:
 
 ```bash
-curl -X POST http://localhost:3000/events/start \
+curl -X POST http://localhost:8080/events/start \
   -H "Content-Type: application/json" \
   -d '{"task_id": 456, "tag_ids": [123, 124]}'
 ```
@@ -246,13 +246,13 @@ curl -X POST http://localhost:3000/events/start \
 #### Listing active events:
 
 ```bash
-curl http://localhost:3000/events
+curl http://localhost:8080/events
 ```
 
 #### Stopping an event:
 
 ```bash
-curl -X POST http://localhost:3000/events/stop/789
+curl -X POST http://localhost:8080/events/stop/789
 ```
 
 ## Error Handling
